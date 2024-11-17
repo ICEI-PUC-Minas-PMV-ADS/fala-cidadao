@@ -1,0 +1,39 @@
+﻿@model IEnumerable<fala_cidadao.Models.Problema>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Problemas</h1>
+
+<p>
+    <a class="btn btn-success" asp-action="Create">Relatar Problema</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ElementAt(0).Categoria)</th>
+            <th>@Html.DisplayNameFor(model => model.ElementAt(0).Descricao)</th>
+            <th>@Html.DisplayNameFor(model => model.ElementAt(0).Data)</th>
+            <th>@Html.DisplayNameFor(model => model.ElementAt(0).Local)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Categoria)</td>
+                <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                <td>@Html.DisplayFor(modelItem => item.Data)</td>
+                <td>@Html.DisplayFor(modelItem => item.Local)</td>
+                <td>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Apagar</a>|
+                    <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Editar</a>|
+                    <a class="btn btn-warning" asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
