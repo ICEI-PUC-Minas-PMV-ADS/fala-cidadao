@@ -11,9 +11,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 
 namespace fala_cidadao.Controllers
-    
+
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class UsuariosController : Controller
     {
         private readonly AppDbContext _context;
@@ -30,9 +30,9 @@ namespace fala_cidadao.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(Usuario usuario) 
-        { 
-            var dados = await _context.Usuarios.FindAsync(usuario.Nome);
+        public async Task<IActionResult> Login(Usuario usuario)
+        {
+            var dados = await _context.Usuarios.FirstOrDefaultAsync(u => u.Nome == usuario.Nome);
 
             if (dados == null)
             {
@@ -63,14 +63,14 @@ namespace fala_cidadao.Controllers
 
                 await HttpContext.SignInAsync(principal, props);
 
-               return Redirect("/");
+                return Redirect("/");
             }
             else
             {
                 ViewBag.Message = "Usuário e/ou senha inválidos!";
             }
 
-                return View(); 
+            return View();
         }
         [AllowAnonymous]
         public async Task<IActionResult> Logout()
@@ -223,10 +223,41 @@ namespace fala_cidadao.Controllers
             return View();
         }
         [AllowAnonymous]
-        public IActionResult AccessDenied() 
+        public IActionResult AccessDenied()
         {
             return View();
         }
+
+        // Cadastro de Usuário Comum
+
+        [AllowAnonymous] // Permitir acesso público
+public IActionResult CadastroComum()
+{
+    return View();
+}
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+[AllowAnonymous] // Permitir acesso público
+public async Task<IActionResult> CadastroComum([Bind("Nome,Senha")] Usuario usuario)
+{
+    if (ModelState.IsValid)
+    {
+                // Definir o perfil como "UsuarioComum" (ou qualquer valor padrão que você usa)
+                usuario.Perfil = Perfil.User; // Ajuste para o valor correto do enum
+
+                // Criptografar a senha antes de salvar
+                usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+
+        // Salvar no banco de dados
+        _context.Add(usuario);
+        await _context.SaveChangesAsync();
+
+        // Redirecionar após cadastro
+        return RedirectToAction("Login", "Usuarios");
+    }
+    return View(usuario);
+}
 
     }
 }
