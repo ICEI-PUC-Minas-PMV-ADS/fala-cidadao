@@ -14,15 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\Usuarios\CadastroComum.cs" />
-    <Compile Remove="Views\Usuarios\Class.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="wwwroot\images\megafonefundo.webp" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ContainerPort Include="8081" />
   </ItemGroup>
 
